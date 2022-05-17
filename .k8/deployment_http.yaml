@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-simple-http
+  namespace: test-a
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: go-simple-http
+  template:
+    metadata:
+      labels:
+        app: go-simple-http
+        version: "go-simple-http"
+    spec:
+      containers:
+      - name: go-mock-api
+        imagePullPolicy: Never
+        image: go-simple-http:latest
+        resources:
+           requests:
+             cpu: 250m
+             memory: 100Mi
+           limits:
+             cpu: 500m
+             memory: 500Mi
+        ports:
+        - containerPort: 8900
+        env:
+        - name: PORT
+          value: "8900"
+        - name: NAME_POD
+          value: "pod-go-simple-http"
+      terminationGracePeriodSeconds: 60

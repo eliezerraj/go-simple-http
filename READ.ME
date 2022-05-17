@@ -1,0 +1,29 @@
+#checar namespace
+kubectl get ns
+#criar namespace
+kubectl apply -f namespace.yaml
+
+#checar pods na namespace
+kubectl get pod -n test-a
+#criar pods
+kubectl apply -f deployment_http.yaml
+
+#checar services na namespace
+kubectl get svc -n test-a
+#criar pods
+kubectl apply -f service.yaml
+
+#TESTAR 
+curl GET http://localhost:8900/health
+
+#matar services
+kubectl get svc -n test-a
+kubectl delete svc svc-go-simple-http -n test-a
+
+#matar pods !!! ELE vai criar um outro no lugar com outro nome
+kubectl get pod -n test-a
+kubectl delete pod go-simple-http-c5dcd69cc-7fdqd -n test-a
+
+#matar deployment e pods
+kubectl get deployment -n test-a
+kubectl delete deployment go-simple-http -n test-a
