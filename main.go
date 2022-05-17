@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"encoding/json"
 
+	"github.com/joho/godotenv"
+
 )
 
 type Pod struct {
@@ -19,7 +21,15 @@ type Pod struct {
 }
 
 var my_pod Pod
-var port = "8900" 
+var my_port = "8900" 
+
+func envVariable(key string) string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("*** WARNING .env file NOT FOUND, using the os.env")
+	}
+	return os.Getenv(key)
+}
 
 func homePage(w http.ResponseWriter, r *http.Request){
     fmt.Fprintf(w, "Welcome to the HomePage Test go 1.0 !")
@@ -33,11 +43,11 @@ func health(w http.ResponseWriter, r *http.Request){
 func handleRequests() {
     http.HandleFunc("/", homePage)
 	http.HandleFunc("/health", health)
-    log.Fatal(http.ListenAndServe(port, nil))
+    log.Fatal(http.ListenAndServe(":" + my_port, nil))
 }
 
 func main() {
-	fmt.Println("Inicio server http port ", port)
+	fmt.Println("Inicio server http port ", my_port)
 
 	// Buscando IP e PID
 	addrs, err := net.InterfaceAddrs()
